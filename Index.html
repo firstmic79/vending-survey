@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nosh Vending - Select Language / Seleccione Idioma</title>
+    <style>
+        :root { 
+            --primary: #1d70e2; 
+            --accent-lime: #1cfb03;
+            --text-dark: #1f2937; 
+            --bg: #f3f4f6; 
+            --card-bg: #ffffff; 
+            --border: #d1d5db; 
+        }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: var(--bg); color: var(--text-dark); display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 20px; margin: 0; box-sizing: border-box; }
+        .container { max-width: 500px; width: 100%; background: var(--card-bg); border-radius: 12px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); padding: 40px 30px; text-align: center; }
+        
+        /* Branded Header Style */
+        .brand-header-block { display: flex; flex-direction: column; align-items: center; border-bottom: 4px solid var(--primary); padding-bottom: 20px; margin-bottom: 30px; position: relative; }
+        .brand-header-block::after { content: ''; position: absolute; bottom: -4px; left: 25%; width: 50%; height: 4px; background-color: var(--accent-lime); }
+        .company-logo { max-width: 130px; max-height: 130px; margin-bottom: 15px; object-fit: contain; border-radius: 50%; }
+        .company-logo:not([src]), .company-logo[src=""] { display: none; }
+        .brand-header-block h1 { color: var(--primary); margin: 0 0 4px 0; font-size: 32px; font-weight: 900; letter-spacing: -0.5px; text-transform: uppercase; }
+        
+        .welcome-text { font-size: 16px; color: #4b5563; font-weight: 600; margin-bottom: 30px; line-height: 1.4; }
+        
+        /* Language Selection Buttons Layout */
+        .lang-button-group { display: flex; flex-direction: column; gap: 15px; }
+        .btn-lang { background-color: var(--primary); color: white; border: none; padding: 18px 20px; font-size: 18px; font-weight: 800; border-radius: 8px; width: 100%; cursor: pointer; transition: background-color 0.2s, transform 0.1s; text-transform: uppercase; letter-spacing: 0.5px; display: flex; flex-direction: column; align-items: center; gap: 2px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        .btn-lang span { font-size: 13px; font-weight: 500; opacity: 0.9; text-transform: none; letter-spacing: 0; }
+        .btn-lang:hover { background-color: #155ec4; }
+        .btn-lang:active { transform: scale(0.99); }
+    </style>
+</head>
+<body>
+<div class="container">
+
+    <!-- BRANDING HEADER -->
+    <div class="brand-header-block">
+        <img src="logo.png" alt="Nosh Vending Logo" class="company-logo" onerror="this.style.display='none';">
+        <h1>Nosh Vending</h1>
+    </div>
+
+    <div class="welcome-text">
+        Please select your preferred language:<br>
+        Por favor seleccione su idioma de preferencia:
+    </div>
+    <!-- BUTTON ACTIONS -->
+    <div class="lang-button-group">
+        <button class="btn-lang" onclick="goToSurvey('en')">English <span>(Take Survey)</span></button>
+        <button class="btn-lang" onclick="goToSurvey('es')">Español <span>(Responder Encuesta)</span></button>
+    </div>
+
+</div>
+
+<script>
+function goToSurvey(language) {
+    // 1. Grab the machine location text string out of the browser bar automatically
+    const urlParams = new URLSearchParams(window.location.search);
+    const locationParam = urlParams.get('location') || '';
+    
+    // 2. Decide the clean destination file path based on button target choice
+    let targetFile = (language === 'es') ? 'vending_survey_es.html' : 'vending_survey.html';
+    
+    // 3. Build the perfect full dynamic string if a location was found
+    if (locationParam) {
+        targetFile += '?location=' + encodeURIComponent(locationParam);
+    }
+    
+    // 4. Send the user browser safely right over to their survey page
+    window.location.href = targetFile;
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nosh Vending - Encuesta de Inventario y Calidad del Servicio</title>
+    <style>
+        :root { 
+            --primary: #1d70e2; 
+            --accent-lime: #1cfb03;
+            --text-cyan: #6be6fd;
+            --text-dark: #1f2937; 
+            --bg: #f3f4f6; 
+            --card-bg: #ffffff; 
+            --border: #d1d5db; 
+        }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: var(--bg); color: var(--text-dark); line-height: 1.5; padding: 20px; margin: 0; }
+        .container { max-width: 750px; margin: 0 auto; background: var(--card-bg); border-radius: 12px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); padding: 30px; }
+        
+        .brand-header-block { display: flex; flex-direction: column; align-items: center; text-align: center; border-bottom: 4px solid var(--primary); padding-bottom: 25px; margin-bottom: 30px; position: relative; }
+        .brand-header-block::after { content: ''; position: absolute; bottom: -4px; left: 25%; width: 50%; height: 4px; background-color: var(--accent-lime); }
+        .company-logo { max-width: 140px; max-height: 140px; margin-bottom: 15px; object-fit: contain; border-radius: 50%; }
+        .company-logo:not([src]), .company-logo[src=""] { display: none; }
+        .brand-header-block h1 { color: var(--primary); margin: 0 0 4px 0; font-size: 32px; font-weight: 900; letter-spacing: -0.5px; text-transform: uppercase; }
+        .brand-header-block p { margin: 0; color: #4b5563; font-weight: 600; font-size: 15px; }
+        
+        .section-title { font-size: 19px; color: var(--primary); border-bottom: 2px solid var(--primary); padding-bottom: 6px; margin-top: 35px; margin-bottom: 20px; font-weight: 700; }
+        .form-group { margin-bottom: 25px; }
+        label { display: block; font-weight: 600; margin-bottom: 6px; font-size: 15px; }
+        .instructions { font-size: 13px; color: #6b7280; margin-top: -4px; margin-bottom: 10px; }
+        input[type="text"], textarea { width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 6px; box-sizing: border-box; font-size: 14px; }
+        textarea { height: 70px; resize: vertical; }
+        .radio-group, .checkbox-grid { background: #f9fafb; border: 1px solid var(--border); border-radius: 6px; padding: 15px; }
+        .radio-option { display: flex; align-items: center; margin-bottom: 10px; }
+        .radio-option:last-child { margin-bottom: 0; }
+        .checkbox-option-block { margin-bottom: 14px; padding: 10px; background: #ffffff; border: 1px solid #e5e7eb; border-radius: 6px; }
+        .checkbox-row { display: flex; align-items: center; }
+        input[type="radio"], input[type="checkbox"] { margin-right: 12px; transform: scale(1.1); cursor: pointer; }
+        
+        .inline-detail-input { display: none; width: 100%; margin-top: 8px; padding: 6px 10px; border: 1px solid var(--primary); border-radius: 4px; font-size: 13px; background-color: #f0f7ff; box-sizing: border-box; }
+        .inline-detail-input:focus { outline: none; border-color: var(--accent-lime); box-shadow: 0 0 0 2px rgba(28, 251, 3, 0.2); }
+        
+        .scale-container { background: #f9fafb; border: 1px solid var(--border); border-radius: 6px; padding: 15px; text-align: center; }
+        .scale-labels { display: flex; justify-content: space-between; font-size: 13px; color: #4b5563; margin-bottom: 10px; padding: 0 10px; }
+        .scale-options { display: flex; justify-content: space-between; padding: 0 15px; }
+        .scale-option { display: flex; flex-direction: column; align-items: center; }
+        .scale-option label { margin-top: 6px; font-size: 13px; }
+        .comment-box { margin-top: 12px; border-left: 3px solid var(--border); padding-left: 12px; }
+        .comment-box label { font-size: 13px; color: #4b5563; font-weight: 500; }
+        .catalog-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        @media(max-width: 600px) { .catalog-grid { grid-template-columns: 1fr; } }
+        .category-label { font-weight: bold; color: var(--primary); margin-top: 15px; margin-bottom: 8px; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; }
+        
+        .btn-submit { background-color: var(--primary); color: white; border: none; padding: 15px 20px; font-size: 17px; font-weight: 800; border-radius: 6px; width: 100%; cursor: pointer; margin-top: 30px; transition: background-color 0.2s, transform 0.1s; text-transform: uppercase; letter-spacing: 0.5px; }
+        .btn-submit:hover { background-color: #155ec4; }
+        .btn-submit:active { transform: scale(0.99); }
+    </style>
+</head>
+<body>
+<div class="container">
+
+    <div class="brand-header-block">
+        <img src="logo.png" alt="Logo de Nosh Vending" class="company-logo" onerror="this.style.display='none';">
+        <h1>Nosh Vending</h1>
+        <p>Encuesta de Selección de Inventario y Calidad del Servicio</p>
+    </div>
+
+    <form id="surveyForm" onsubmit="submitForm(event)">
+        <div class="section-title">1. Registro del Sorteo y Ubicación (Requerido)</div>
+        <div class="form-group"><label for="fullName">Nombre Completo *</label><input type="text" id="fullName" required placeholder="Nombre y apellido"></div>
+        <div class="form-group"><label for="location">Ubicación de la Máquina / Nombre de la Empresa *</label><input type="text" id="location" required placeholder="Al escanear el código QR de su máquina, este campo se completa automáticamente."></div>
+        <div class="form-group"><label for="contactInfo">Información de Contacto (Correo Electrónico o Teléfono Móvil) *</label><div class="instructions">Se utiliza estrictamente para verificar los datos de participación y notificarle de inmediato si gana el sorteo mensual de la tarjeta de regalo de $50.</div><input type="text" id="contactInfo" required placeholder="Ej. nombre@correo.com o 717-555-0144"></div>
+        <div class="section-title">2. Comentarios sobre el Servicio y Estado de la Máquina</div>
+        <div class="form-group">
+            <label>¿Cuál es su método de pago diario preferido en nuestra máquina?</label>
+            <div class="radio-group">
+                <div class="radio-option"><input type="radio" id="prefCash" name="paymentPref" value="Cash"><label for="prefCash">Efectivo (Billetes o Monedas)</label></div>
+                <div class="radio-option"><input type="radio" id="prefCredit" name="paymentPref" value="Credit"><label for="prefCredit">Tarjeta de Crédito/Débito / Pago Móvil (Apple Pay, Google Pay)</label></div>
+            </div>
+            <div class="comment-box"><label for="payPrefComm">Notas opcionales sobre los pagos en la máquina:</label><textarea id="payPrefComm" placeholder="Háganos saber sobre la velocidad del lector de tarjetas, errores con el cambio, etc..."></textarea></div>
+        </div>
+
+        <div class="form-group">
+            <label>¿El vidrio, la estructura exterior y la bandeja de entrega de la máquina se mantienen limpios y sanitarios?</label>
+            <div class="radio-group">
+                <div class="radio-option"><input type="radio" id="cleanYes" name="machineClean" value="Yes"><label for="cleanYes">Sí, está limpia</label></div>
+                <div class="radio-option"><input type="radio" id="cleanNo" name="machineClean" value="No"><label for="cleanNo">No, necesita limpieza</label></div>
+            </div>
+            <div class="comment-box"><label for="cleanComm">Comentarios opcionales sobre la limpieza de la máquina:</label><textarea id="cleanComm" placeholder="Proporcione detalles..."></textarea></div>
+        </div>
+
+        <div class="form-group">
+            <label>¿El área de descanso que rodea la máquina expendedora se mantiene limpia y ordenada?</label>
+            <div class="instructions">Nota: Las tareas generales de limpieza de la sala corresponden al personal de la empresa, pero nosotros enviamos un reporte a la administración de su edificio.</div>
+            <div class="radio-group">
+                <div class="radio-option"><input type="radio" id="spaceCleanYes" name="spaceClean" value="Yes"><label for="spaceCleanYes">Sí, el área de descanso está limpia</label></div>
+                <div class="radio-option"><input type="radio" id="spaceCleanNo" name="spaceClean" value="No"><label for="spaceCleanNo">No, el área circundante está desordenada</label></div>
+            </div>
+            <div class="comment-box"><label for="spaceCleanComm">Comentarios opcionales sobre el estado del área de descanso:</label><textarea id="spaceCleanComm" placeholder="Describa cualquier problema..."></textarea></div>
+        </div>
+
+        <div class="form-group">
+            <label>¿La máquina expendedora se reabastece regularmente manteniendo un alto nivel de inventario cuando la usa?</label>
+            <div class="radio-group">
+                <div class="radio-option"><input type="radio" id="stockYes" name="machineStock" value="Yes"><label for="stockYes">Sí, los productos rara vez están agotados</label></div>
+                <div class="radio-option"><input type="radio" id="stockNo" name="machineStock" value="No"><label for="stockNo">No, los productos que quiero suelen estar vacíos</label></div>
+            </div>
+            <div class="comment-box"><label for="stockComm">Comentarios opcionales (Indique los productos que suele encontrar vacíos):</label><textarea id="stockComm" placeholder="Ej. El Red Bull siempre está agotado los jueves..."></textarea></div>
+        </div>
+
+        <div class="form-group">
+            <label>¿Los productos alimenticios y la selección de bebidas están siempre frescos y vigentes?</label>
+            <div class="radio-group">
+                <div class="radio-option"><input type="radio" id="freshYes" name="itemFresh" value="Yes"><label for="freshYes">Sí, las opciones siempre están frescas</label></div>
+                <div class="radio-option"><input type="radio" id="freshNo" name="itemFresh" value="No"><label for="freshNo">No, me he topado con productos vencidos o que no están frescos</label></div>
+            </div>
+            <div class="comment-box"><label for="freshComm">Comentarios opcionales sobre la calidad del producto:</label><textarea id="freshComm" placeholder="Por favor, indique los productos específicos si tuvo problemas con las fechas de vencimiento..."></textarea></div>
+        </div>
+
+        <div class="form-group">
+            <label>¿Qué día preferiría que nuestro camión de ruta realice el reabastecimiento estándar de las máquinas?</label>
+            <div class="radio-group">
+                <div class="radio-option"><input type="radio" id="dayMon" name="serviceDay" value="Monday"><label for="dayMon">Lunes</label></div>
+                <div class="radio-option"><input type="radio" id="dayTue" name="serviceDay" value="Tuesday"><label for="dayTue">Martes</label></div>
+                <div class="radio-option"><input type="radio" id="dayWed" name="serviceDay" value="Wednesday"><label for="dayWed">Miércoles</label></div>
+                <div class="radio-option"><input type="radio" id="dayThu" name="serviceDay" value="Thursday"><label for="dayThu">Jueves</label></div>
+                <div class="radio-option"><input type="radio" id="dayFri" name="serviceDay" value="Friday"><label for="dayFri">Viernes</label></div>
+            </div>
+            <div class="comment-box"><label for="serviceDayComm">Notas opcionales sobre el horario:</label><textarea id="serviceDayComm" placeholder="Ej. Reabastecer antes del cambio de turno a las 2 PM..."></textarea></div>
+        </div>
+
+        <div class="form-group">
+            <label>¿Qué tan satisfecho está con la confiabilidad del hardware de los lectores de pago digitales?</label>
+            <div class="instructions">Califique la probabilidad de que el lector o la ranura de billetes acepten su pago sin marcar errores.</div>
+            <div class="scale-container">
+                <div class="scale-labels"><span>1 (Poco probable - Errores constantes)</span><span>5 (Muy probable - Sin fallas)</span></div>
+                <div class="scale-options">
+                    <div class="scale-option"><input type="radio" name="payReliability" value="1"><label>1</label></div>
+                    <div class="scale-option"><input type="radio" name="payReliability" value="2"><label>2</label></div>
+                    <div class="scale-option"><input type="radio" name="payReliability" value="3"><label>3</label></div>
+                    <div class="scale-option"><input type="radio" name="payReliability" value="4"><label>4</label></div>
+                    <div class="scale-option"><input type="radio" name="payReliability" value="5"><label>5</label></div>
+                </div>
+            </div>
+            <div class="comment-box"><label for="scalePayComm">Comentarios opcionales (Detalle cualquier error específico del lector de tarjetas o rechazo de billetes):</label><textarea id="scalePayComm" placeholder="Describa los errores al deslizar o acercar la tarjeta..."></textarea></div>
+        </div>
+
+        <div class="section-title">3. Funciones y Capacidades Deseadas en la Máquina</div>
+        <div class="form-group">
+            <label>¿Qué actualizaciones de hardware o software le gustaría ver en la máquina de su ubicación? (Seleccione todas las que apliquen)</label>
+            <div class="checkbox-grid">
+                <div class="checkbox-option-block"><div class="checkbox-row"><input type="checkbox" name="hardwareFeatures" value="Multi-Item Sale"><label>Múltiples transacciones en una sola compra (Comprar varios productos sin pasar la tarjeta varias veces)</label></div></div>
+                <div class="checkbox-option-block"><div class="checkbox-row"><input type="checkbox" name="hardwareFeatures" value="High Denominations"><label>Aceptación de billetes de mayor denominación (Billetes de $10 y $20)</label></div></div>
+                <div class="checkbox-option-block"><div class="checkbox-row"><input type="checkbox" name="hardwareFeatures" value="Cash Back Program"><label>Acumular reembolsos de dinero (cash-back) o recompensas por sus compras a lo largo del tiempo</label></div></div>
+                <div class="checkbox-option-block"><div class="checkbox-row"><input type="checkbox" name="hardwareFeatures" value="Loyalty Account"><label>Un programa formal de lealtad o club de recompensas por puntos</label></div></div>
+                <div class="checkbox-option-block"><div class="checkbox-row"><input type="checkbox" name="hardwareFeatures" value="Prepaid RFID Cards"><label>Capacidad de pagar usando una tarjeta física prepagada o recargable</label></div></div>
+                <div class="checkbox-option-block"><div class="checkbox-row"><input type="checkbox" name="hardwareFeatures" value="Gamified Prizes"><label>Más juegos, sorteos digitales en pantalla o premios aleatorios integrados al pagar</label></div></div>
+            </div>
+            <div class="comment-box"><label for="featuresComm">Comentarios opcionales sobre las capacidades o actualizaciones de la máquina:</label><textarea id="featuresComm" placeholder="Añada sugerencias de funciones personalizadas..."></textarea></div>
+        </div>
+        <div class="section-title">4. Selección de Inventario de Productos Principales</div>
+        <div class="instructions" style="margin-top: -15px; margin-bottom: 20px;">Marque las casillas de los productos que compra o que desea ver con más frecuencia. Las casillas se expandirán automáticamente para que pueda solicitar marcas y sabores específicos.</div>
+
+        <div class="category-label">🥤 Bebidas y Sodas</div>
+        <div class="checkbox-grid catalog-grid">
+            <div class="checkbox-option-block">
+                <div class="checkbox-row"><input type="checkbox" name="productSelect" value="Regular Canned Soda" onchange="toggleInlineText(this)"><label>Sodas Regulares en Lata (12oz)</label></div>
+                <input type="text" class="inline-detail-input" placeholder="¿Marcas o sabores preferidos? (Ej. Coke, Pepsi, Cherry Coke, Sprite, Sunkist Grape, Cherry RC)">
+            </div>
+            <div class="checkbox-option-block">
+                <div class="checkbox-row"><input type="checkbox" name="productSelect" value="Regular Bottled Soda" onchange="toggleInlineText(this)"><label>Sodas Regulares en Botella (16.9oz / 20oz)</label></div>
+                <input type="text" class="inline-detail-input" placeholder="¿Marcas o sabores preferidos? (Ej. Mountain Dew, Coke, Dr Pepper, Ginger Ale, Baja Blast, Code Red)">
+            </div>
+            <div class="checkbox-option-block">
+                <div class="checkbox-row"><input type="checkbox" name="productSelect" value="Diet & Zero Sodas" onchange="toggleInlineText(this)"><label>Sodas de Dieta y Zero Azúcar</label></div>
+                <input type="text" class="inline-detail-input" placeholder="¿Marcas o sabores preferidos? (Ej. Diet Coke, Pepsi Zero, Sprite Zero, Diet Dr Pepper, Cherry Coke Zero)">
+            </div>
+            <div class="checkbox-option-block">
+                <div class="checkbox-row"><input type="checkbox" name="productSelect" value="Energy Drinks" onchange="toggleInlineText(this)"><label>Bebidas Energéticas Premium</label></div>
+                <input type="text" class="inline-detail-input" placeholder="¿Líneas o marcas preferidas? (Ej. Red Bull Regular/SugarFree/Juneberry, Monster, Celsius, Reign)">
+            </div>
+            <div class="checkbox-option-block">
+                <div class="checkbox-row"><input type="checkbox" name="productSelect" value="Water & Hydration" onchange="toggleInlineText(this)"><label>Agua Purificada e Hidratación</label></div>
+                <input type="text" class="inline-detail-input" placeholder="¿Opciones preferidas? (Ej. Agua de manantial embotellada, Vitamin Water, Electrolit, Vita Coco)">
+            </div>
+            <div class="checkbox-option-block">
+                <div class="checkbox-row"><input type="checkbox" name="productSelect" value="Teas, Juices & Milk" onchange="toggleInlineText(this)"><label>Tés, Jugos y Bebidas Lácteas</label></div>
+                <input type="text" class="inline-detail-input" placeholder="¿Marcas preferidas? (Ej. Arizona Green Tea, Gold Peak Sweet, Tropicana, Jugo de manzana, Leche con chocolate, Rutter's 2%)">
+            </div>
+            <div class="checkbox-option-block">
+                <div class="checkbox-row"><input type="checkbox" name="productSelect" value="Iced Coffee Products" onchange="toggleInlineText(this)"><label>Cafés Fríos Premium (Iced Coffee)</label></div>
+                <input type="text" class="inline-detail-input" placeholder="¿Preferencias de marcas? (Ej. Dunkin Iced Caramel/Vanilla, Starbucks Vanilla/Mocha)">
+            </div>
+        </div>
+
+        <div class="category-label">🍿 Chips y Snacks Salados</div>
+        <div class="checkbox-grid catalog-grid">
+            <div class="checkbox-option-block">
+                <div class="checkbox-row"><input type="checkbox" name="productSelect" value="Potato & Kettle Chips" onchange="toggleInlineText(this)"><label>Papas Fritas Tradicionales y Estilo 'Kettle'</label></div>
+                <input type="text" class="inline-detail-input" placeholder="¿Sabores preferidos? (Ej. Lay's Original/Sour Cream/All Dressed, Martin's Salt & Vinegar, Kettle Cooked)">
+            </div>
+            <div class="checkbox-option-block">
+                <div class="checkbox-row"><input type="checkbox" name="productSelect" value="Tortilla & Corn Snacks" onchange="toggleInlineText(this)"><label>Tortilla Chips y Snacks de Maíz</label></div>
+                <input type="text" class="inline-detail-input" placeholder="¿Marcas preferidas? (Ej. Doritos Nacho Cheese/Cool Ranch/Spicy Sweet Chili, Takis Fuego, Fritos Regulares)">
+            </div>
+            <div class="checkbox-option-block">
+                <div class="checkbox-row"><input type="checkbox" name="productSelect" value="Pretzels & Popcorn" onchange="toggleInlineText(this)"><label>Líneas de Pretzels y Palomitas de Maíz (Popcorn)</label></div>
+                <input type="text" class="inline-detail-input" placeholder="¿Tipos preferidos? (Ej. Snyder's Pretzels, SkinnyPop, Popcorn de White Cheddar, Funyuns)">
+            </div>
+            <div class="checkbox-option-block">
+                <div class="checkbox-row"><input type="checkbox" name="productSelect" value="Cheese Snacks & Mixes" onchange="toggleInlineText(this)"><label>Snacks de Queso y Mezclas Saladas (Snack Mixes)</label></div>
+                <input type="text" class="inline-detail-input" placeholder="¿Marcas preferidas? (Ej. Cheetos Crunchy, Cheez-It, Munchies Snack Mix, Chex Mix, Combos)">
+            </div>
+            <div class="checkbox-option-block">
+                <div class="checkbox-row"><input type="checkbox" name="productSelect" value="Crackers & Packaged Kits" onchange="toggleInlineText(this)"><label>Galletas de Sándwich (Sandwich Crackers) y Lunch Kits</label></div>
+                <input type="text" class="inline-detail-input" placeholder="¿Líneas preferidas? (Ej. Lance Peanut Butter/Cheese, Goldfish, Ritz Bits, Lunchables Trays)">
+            </div>
+            <div class="checkbox-option-block">
+                <div class="checkbox-row"><input type="checkbox" name="productSelect" value="Nuts, Seeds & Pockets" onchange="toggleInlineText(this)"><label>Nueces, Semillas y Snacks Saludables</label></div>
+                <input type="text" class="inline-detail-input" placeholder="¿Marcas preferidas? (Ej. Planter's Peanuts/Cashews, Sargento Balanced Breaks)">
+            </div>
+        </div>
+        <div class="form-group" style="margin-top: 20px;">
+            <div class="checkbox-row">
+                <input type="checkbox" id="missingFieldsCheck" onchange="let d=document.getElementById('missingFieldsBlock'); if(this.checked){d.style.display='block';}else{d.style.display='none';d.value=''}">
+                <label for="missingFieldsCheck" style="font-weight: normal; margin-bottom: 0;">Quiero solicitar productos que no se encuentran en la lista de arriba</label>
+            </div>
+            <textarea id="missingFieldsBlock" style="display: none; margin-top: 10px;" placeholder="Escriba cualquier producto o variación de marca que no esté en la lista y que desee que tengamos..."></textarea>
+        </div>
+
+        <div class="section-title">5. Comentarios Adicionales</div>
+        <div class="form-group">
+            <label for="additionalComments">¿Hay algo más que le gustaría hacernos saber sobre su experiencia con la máquina expendedora de su área de descanso?</label>
+            <textarea id="additionalComments" style="height: 100px;" placeholder="Comparta aquí cualquier comentario general, problemas con el servicio o ideas de mejora..."></textarea>
+        </div>
+        <button type="submit" class="btn-submit">Enviar Encuesta y Participar en el Sorteo de \$50</button>
+    </form>
+</div>
+
+<script>
+function toggleInlineText(checkboxElement) {
+    const parentBlock = checkboxElement.closest('.checkbox-option-block');
+    const inlineInput = parentBlock.querySelector('.inline-detail-input');
+    if (inlineInput) {
+        if (checkboxElement.checked) {
+            inlineInput.style.display = 'block';
+            inlineInput.setAttribute('required', 'true');
+            inlineInput.focus();
+        } else {
+            inlineInput.style.display = 'none';
+            inlineInput.removeAttribute('required');
+            inlineInput.value = '';
+        }
+    }
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const locationParam = urlParams.get('location');
+    if (locationParam) {
+        const locationField = document.getElementById('location');
+        if (locationField) {
+            locationField.value = decodeURIComponent(locationParam);
+            locationField.readOnly = true; 
+            locationField.style.background = "#e5e7eb";
+            locationField.style.color = "#374151";
+        }
+    }
+});
+
+function submitForm(event) {
+    event.preventDefault();
+    const getDetailedCatalogSelections = () => {
+        return Array.from(document.querySelectorAll('input[name="productSelect"]:checked')).map(cb => {
+            const parent = cb.closest('.checkbox-option-block');
+            const userFlavorsText = parent.querySelector('.inline-detail-input')?.value.trim();
+            return userFlavorsText ? `${cb.value} (${userFlavorsText})` : cb.value;
+        });
+    };
+
+    const formData = {
+        fullName: document.getElementById('fullName').value,
+        location: document.getElementById('location').value,
+        contactInfo: document.getElementById('contactInfo').value,
+        paymentPref: document.querySelector('input[name="paymentPref"]:checked')?.value || "Not Answered",
+        payPrefComments: document.getElementById('payPrefComm').value,
+        machineCleanliness: document.querySelector('input[name="machineClean"]:checked')?.value || "Not Answered",
+        cleanlinessComments: document.getElementById('cleanComm').value,
+        breakroomCleanliness: document.querySelector('input[name="spaceClean"]:checked')?.value || "Not Answered",
+        breakroomComments: document.getElementById('spaceCleanComm').value,
+        stockFrequency: document.querySelector('input[name="machineStock"]:checked')?.value || "Not Answered",
+        stockComments: document.getElementById('stockComm').value,
+        productFreshness: document.querySelector('input[name="itemFresh"]:checked')?.value || "Not Answered",
+        freshnessComments: document.getElementById('freshComm').value,
+        preferredServiceDay: document.querySelector('input[name="serviceDay"]:checked')?.value || "Not Answered",
+        serviceDayComments: document.getElementById('serviceDayComm').value,
+        paymentHardwareReliability: document.querySelector('input[name="payReliability"]:checked')?.value || "Not Answered",
+        paymentHardwareComments: document.getElementById('scalePayComm').value,
+        recommendationNetScore: "Not Applicable",
+        recommendationComments: "None",
+        requestedMachineUpgrades: Array.from(document.querySelectorAll('input[name="hardwareFeatures"]:checked')).map(cb => cb.value),
+        upgradesComments: document.getElementById('featuresComm').value,
+        catalogSelections: getDetailedCatalogSelections(),
+        unlistedCustomRequests: document.getElementById('missingFieldsBlock').value,
+        narrativeAdditionalComments: document.getElementById('additionalComments').value
+    };
+
+    const TARGET_WEB_WEBHOOK = 'https://script.google.com/macros/s/AKfycbwSjHKecMiDwfS8sR6xhjyejVGphWzQYXiWdZkDR-OFnHGsCmoeeK-EvEp2v3K5TiA/exec';
+
+    if(TARGET_WEB_WEBHOOK === 'YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL') {
+        alert("¡Éxito! Sus opciones de productos y sugerencias de sabores se han registrado de forma segura.\n\n(Nota de configuración de la base de datos: Cuando esté listo para enviar estas respuestas directamente a su hoja de cálculo de seguimiento, abra este archivo en su Mac y reemplace el texto 'YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL' con la URL real de su aplicación web de Google Script).");
+        document.getElementById('surveyForm').reset();
+        document.querySelectorAll('.inline-detail-input').forEach(input => input.style.display = 'none');
+        document.getElementById('missingFieldsBlock').style.display = 'none';
+        window.scrollTo(0,0);
+        return;
+    }
+
+    fetch(TARGET_WEB_WEBHOOK, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData)
+    }).then(() => {
+        alert('¡Muchas gracias! ¡Hemos recibido sus comentarios correctamente y su participación ha sido registrada para el sorteo de la tarjeta de regalo de \$50!');
+        document.getElementById('surveyForm').reset();
+        document.querySelectorAll('.inline-detail-input').forEach(input => input.style.display = 'none');
+        document.getElementById('missingFieldsBlock').style.display = 'none';
+        window.scrollTo(0,0);
+    }).catch(err => alert('Error en la transmisión de datos: ' + err));
+}
+</script>
+</body>
+</html>

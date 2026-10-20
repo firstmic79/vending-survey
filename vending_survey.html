@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nosh Vending - Inventory & Service Feedback Survey</title>
+    <style>
+        :root { 
+            --primary: #1d70e2; 
+            --accent-lime: #1cfb03;
+            --text-cyan: #6be6fd;
+            --text-dark: #1f2937; 
+            --bg: #f3f4f6; 
+            --card-bg: #ffffff; 
+            --border: #d1d5db; 
+        }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background-color: var(--bg); color: var(--text-dark); line-height: 1.5; padding: 20px; margin: 0; }
+        .container { max-width: 750px; margin: 0 auto; background: var(--card-bg); border-radius: 12px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); padding: 30px; }
+        
+        /* Nosh Vending Corporate Header Element Style */
+        .brand-header-block { display: flex; flex-direction: column; align-items: center; text-align: center; border-bottom: 4px solid var(--primary); padding-bottom: 25px; margin-bottom: 30px; position: relative; }
+        .brand-header-block::after { content: ''; position: absolute; bottom: -4px; left: 25%; width: 50%; height: 4px; background-color: var(--accent-lime); }
+        .company-logo { max-width: 140px; max-height: 140px; margin-bottom: 15px; object-fit: contain; border-radius: 50%; }
+        .company-logo:not([src]), .company-logo[src=""] { display: none; }
+        .brand-header-block h1 { color: var(--primary); margin: 0 0 4px 0; font-size: 32px; font-weight: 900; letter-spacing: -0.5px; text-transform: uppercase; }
+        .brand-header-block p { margin: 0; color: #4b5563; font-weight: 600; font-size: 15px; }
+        
+        .section-title { font-size: 19px; color: var(--primary); border-bottom: 2px solid var(--primary); padding-bottom: 6px; margin-top: 35px; margin-bottom: 20px; font-weight: 700; }
+        .form-group { margin-bottom: 25px; }
+        label { display: block; font-weight: 600; margin-bottom: 6px; font-size: 15px; }
+        .instructions { font-size: 13px; color: #6b7280; margin-top: -4px; margin-bottom: 10px; }
+        input[type="text"], textarea { width: 100%; padding: 10px; border: 1px solid var(--border); border-radius: 6px; box-sizing: border-box; font-size: 14px; }
+        textarea { height: 70px; resize: vertical; }
+        .radio-group, .checkbox-grid { background: #f9fafb; border: 1px solid var(--border); border-radius: 6px; padding: 15px; }
+        .radio-option { display: flex; align-items: center; margin-bottom: 10px; }
+        .radio-option:last-child { margin-bottom: 0; }
+        .checkbox-option-block { margin-bottom: 14px; padding: 10px; background: #ffffff; border: 1px solid #e5e7eb; border-radius: 6px; }
+        .checkbox-row { display: flex; align-items: center; }
+        input[type="radio"], input[type="checkbox"] { margin-right: 12px; transform: scale(1.1); cursor: pointer; }
+        
+        /* Branded expansion block style */
+        .inline-detail-input { display: none; width: 100%; margin-top: 8px; padding: 6px 10px; border: 1px solid var(--primary); border-radius: 4px; font-size: 13px; background-color: #f0f7ff; box-sizing: border-box; }
+        .inline-detail-input:focus { outline: none; border-color: var(--accent-lime); box-shadow: 0 0 0 2px rgba(28, 251, 3, 0.2); }
+        
+        .scale-container { background: #f9fafb; border: 1px solid var(--border); border-radius: 6px; padding: 15px; text-align: center; }
+        .scale-labels { display: flex; justify-content: space-between; font-size: 13px; color: #4b5563; margin-bottom: 10px; padding: 0 10px; }
+        .scale-options { display: flex; justify-content: space-between; padding: 0 15px; }
+        .scale-option { display: flex; flex-direction: column; align-items: center; }
+        .scale-option label { margin-top: 6px; font-size: 13px; }
+        .comment-box { margin-top: 12px; border-left: 3px solid var(--border); padding-left: 12px; }
+        .comment-box label { font-size: 13px; color: #4b5563; font-weight: 500; }
+        .catalog-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+        @media(max-width: 600px) { .catalog-grid { grid-template-columns: 1fr; } }
+        .category-label { font-weight: bold; color: var(--primary); margin-top: 15px; margin-bottom: 8px; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; }
+        
+        /* Branded primary action layout buttons */
+        .btn-submit { background-color: var(--primary); color: white; border: none; padding: 15px 20px; font-size: 17px; font-weight: 800; border-radius: 6px; width: 100%; cursor: pointer; margin-top: 30px; transition: background-color 0.2s, transform 0.1s; text-transform: uppercase; letter-spacing: 0.5px; }
+        .btn-submit:hover { background-color: #155ec4; }
+        .btn-submit:active { transform: scale(0.99); }
+    </style>
+</head>
+<body>
+<div class="container">
+
+    <!-- NOSH VENDING BRANDING HEADER -->
+    <div class="brand-header-block">
+        <!-- Save your round logo image as 'logo.png' in the same folder as this survey file -->
+        <img src="logo.png" alt="Nosh Vending Logo" class="company-logo" onerror="this.style.display='none';">
+        <h1>Nosh Vending</h1>
+        <p>Breakroom Inventory Selection & Service Quality Survey</p>
+    </div>
+
+    <form id="surveyForm" onsubmit="submitForm(event)">
+        <div class="section-title">1. Raffle Entry & Location (Required)</div>
+        <div class="form-group"><label for="fullName">Full Name *</label><input type="text" id="fullName" required placeholder="First and last name"></div>
+        <div class="form-group"><label for="location">Vending Machine Location / Facility Name *</label><input type="text" id="location" required placeholder="Scanning your machine's QR code locks this automatically."></div>
+        <div class="form-group"><label for="contactInfo">Contact Information (Email or Mobile Phone) *</label><div class="instructions">Used strictly to verify entry data and notify you immediately if you win the monthly $50 Gift Card raffle.</div><input type="text" id="contactInfo" required placeholder="e.g., name@email.com or 717-555-0144"></div>
+        <div class="section-title">2. Service Performance & Machine Condition Feedback</div>
+        <div class="form-group">
+            <label>What is your preferred daily payment method at our vending machine?</label>
+            <div class="radio-group">
+                <div class="radio-option"><input type="radio" id="prefCash" name="paymentPref" value="Cash"><label for="prefCash">Physical Cash (Bills or Coins)</label></div>
+                <div class="radio-option"><input type="radio" id="prefCredit" name="paymentPref" value="Credit"><label for="prefCredit">Credit/Debit Card / Mobile Tap Wallet (Apple Pay, Google Pay)</label></div>
+            </div>
+            <div class="comment-box"><label for="payPrefComm">Optional notes regarding hardware payments:</label><textarea id="payPrefComm" placeholder="Let us know about card swipe speeds, change dispenser snags, etc..."></textarea></div>
+        </div>
+
+        <div class="form-group">
+            <label>Are the machine's glass front, structural housing, and item delivery port kept clean and sanitary?</label>
+            <div class="radio-group">
+                <div class="radio-option"><input type="radio" id="cleanYes" name="machineClean" value="Yes"><label for="cleanYes">Yes, it is clean</label></div>
+                <div class="radio-option"><input type="radio" id="cleanNo" name="machineClean" value="No"><label for="cleanNo">No, it requires cleaning attention</label></div>
+            </div>
+            <div class="comment-box"><label for="cleanComm">Optional machine cleanliness details:</label><textarea id="cleanComm" placeholder="Provide details..."></textarea></div>
+        </div>
+
+        <div class="form-group">
+            <label>Is the surrounding breakroom area housing the vending machine kept tidy and clear of clutter?</label>
+            <div class="instructions">Note: General room cleaning belongs to corporate site hosts, but we pass logs to your building administration.</div>
+            <div class="radio-group">
+                <div class="radio-option"><input type="radio" id="spaceCleanYes" name="spaceClean" value="Yes"><label for="spaceCleanYes">Yes, the breakroom lounge area is clean</label></div>
+                <div class="radio-option"><input type="radio" id="spaceCleanNo" name="spaceClean" value="No"><label for="spaceCleanNo">No, the surrounding space layout is messy</label></div>
+            </div>
+            <div class="comment-box"><label for="spaceCleanComm">Optional breakroom condition details:</label><textarea id="spaceCleanComm" placeholder="Describe any workspace facility tracking issues..."></textarea></div>
+        </div>
+
+        <div class="form-group">
+            <label>Is the vending machine regularly restocked to maintain high product levels when you visit it?</label>
+            <div class="radio-group">
+                <div class="radio-option"><input type="radio" id="stockYes" name="machineStock" value="Yes"><label for="stockYes">Yes, choices are rarely sold out</label></div>
+                <div class="radio-option"><input type="radio" id="stockNo" name="machineStock" value="No"><label for="stockNo">No, items I look for are frequently empty</label></div>
+            </div>
+            <div class="comment-box"><label for="stockComm">Optional restocking logs (List what you regularly find out-of-stock):</label><textarea id="stockComm" placeholder="e.g., Red Bull is always out on Thursday afternoons..."></textarea></div>
+        </div>
+
+        <div class="form-group">
+            <label>Are food products and carbonated beverage lines always fresh and within expiration guidelines?</label>
+            <div class="radio-group">
+                <div class="radio-option"><input type="radio" id="freshYes" name="itemFresh" value="Yes"><label for="freshYes">Yes, snacks match expected freshness standards</label></div>
+                <div class="radio-option"><input type="radio" id="freshNo" name="itemFresh" value="No"><label for="freshNo">No, I have run into stale or expired inventory dates</label></div>
+            </div>
+            <div class="comment-box"><label for="freshComm">Optional product quality tracking logs:</label><textarea id="freshComm" placeholder="Please call out specific lines if you spotted past-due inventory dates..."></textarea></div>
+        </div>
+
+        <div class="form-group">
+            <label>Which day would you prefer our route truck perform standard machine product restocking?</label>
+            <div class="radio-group">
+                <div class="radio-option"><input type="radio" id="dayMon" name="serviceDay" value="Monday"><label for="dayMon">Monday</label></div>
+                <div class="radio-option"><input type="radio" id="dayTue" name="serviceDay" value="Tuesday"><label for="dayTue">Tuesday</label></div>
+                <div class="radio-option"><input type="radio" id="dayWed" name="serviceDay" value="Wednesday"><label for="dayWed">Wednesday</label></div>
+                <div class="radio-option"><input type="radio" id="dayThu" name="serviceDay" value="Thursday"><label for="dayThu">Thursday</label></div>
+                <div class="radio-option"><input type="radio" id="dayFri" name="serviceDay" value="Friday"><label for="dayFri">Friday</label></div>
+            </div>
+            <div class="comment-box"><label for="serviceDayComm">Optional delivery timing constraints:</label><textarea id="serviceDayComm" placeholder="e.g., Restock prior to our 2 PM manufacturing line shift swap..."></textarea></div>
+        </div>
+        <div class="form-group">
+            <label>How satisfied are you with the hardware reliability of digital payment readers?</label>
+            <div class="instructions">Rate how likely the reader or bill validator accepts your selection row input without showing processing errors.</div>
+            <div class="scale-container">
+                <div class="scale-labels"><span>1 (Highly Unlikely - Constant Errors)</span><span>5 (Highly Likely - Zero Issues)</span></div>
+                <div class="scale-options">
+                    <div class="scale-option"><input type="radio" name="payReliability" value="1"><label>1</label></div>
+                    <div class="scale-option"><input type="radio" name="payReliability" value="2"><label>2</label></div>
+                    <div class="scale-option"><input type="radio" name="payReliability" value="3"><label>3</label></div>
+                    <div class="scale-option"><input type="radio" name="payReliability" value="4"><label>4</label></div>
+                    <div class="scale-option"><input type="radio" name="payReliability" value="5"><label>5</label></div>
+                </div>
+            </div>
+            <div class="comment-box"><label for="scalePayComm">Optional comments (Detail specific card swipe or bill acceptor errors):</label><textarea id="scalePayComm" placeholder="Describe swipe or tap terminal errors..."></textarea></div>
+        </div>
+
+        <div class="section-title">3. Desired Smart Machine Tech Features</div>
+        <div class="form-group">
+            <label>What hardware or software feature upgrades would you value having on your local machine? (Check all that apply)</label>
+            <div class="checkbox-grid">
+                <div class="checkbox-option-block"><div class="checkbox-row"><input type="checkbox" name="hardwareFeatures" value="Multi-Item Sale"><label>Multi-item basket purchasing (Buy several options without swiping your card for each entry)</label></div></div>
+                <div class="checkbox-option-block"><div class="checkbox-row"><input type="checkbox" name="hardwareFeatures" value="High Denominations"><label>Higher denomination bill acceptance tracking (Accepting \$10 and \$20 bills safely)</label></div></div>
+                <div class="checkbox-option-block"><div class="checkbox-row"><input type="checkbox" name="hardwareFeatures" value="Cash Back Program"><label>Accrue instant purchase cash-back rewards payouts over time</label></div></div>
+                <div class="checkbox-option-block"><div class="checkbox-row"><input type="checkbox" name="hardwareFeatures" value="Loyalty Account"><label>A structured user loyalty account app framework or point tracker system</label></div></div>
+                <div class="checkbox-option-block"><div class="checkbox-row"><input type="checkbox" name="hardwareFeatures" value="Prepaid RFID Cards"><label>Ability to check out using a dedicated physical company prepaid RFID card swipe</label></div></div>
+                <div class="checkbox-option-block"><div class="checkbox-row"><input type="checkbox" name="hardwareFeatures" value="Gamified Prizes"><label>More touchscreen games, screen sweepstakes, or surprise lottery prize distributions</label></div></div>
+            </div>
+            <div class="comment-box"><label for="featuresComm">Optional tech feature upgrade logs:</label><textarea id="featuresComm" placeholder="Add custom app module or telemetry ideas..."></textarea></div>
+        </div>
+        <div class="section-title">4. Core Product Inventory Preference Selections</div>
+        <div class="instructions" style="margin-top: -15px; margin-bottom: 20px;">Check the items you regularly buy or want to see stocked. Boxes will automatically expand to capture your brand and flavor requests.</div>
+
+        <div class="category-label">🥤 Beverages & Sodas</div>
+        <div class="checkbox-grid catalog-grid">
+            <div class="checkbox-option-block">
+                <div class="checkbox-row"><input type="checkbox" name="productSelect" value="Regular Canned Soda" onchange="toggleInlineText(this)"><label>Regular Canned Sodas (12oz)</label></div>
+                <input type="text" class="inline-detail-input" placeholder="Preferred brands/flavors? (e.g., Coke, Pepsi, Cherry Coke, Sprite, Sunkist Grape, Cherry RC)">
+            </div>
+            <div class="checkbox-option-block">
+                <div class="checkbox-row"><input type="checkbox" name="productSelect" value="Regular Bottled Soda" onchange="toggleInlineText(this)"><label>Regular Bottled Sodas (16.9oz / 20oz)</label></div>
+                <input type="text" class="inline-detail-input" placeholder="Preferred brands/flavors? (e.g., Mountain Dew, Coke, Dr Pepper, Ginger Ale, Baja Blast, Code Red)">
+            </div>
+            <div class="checkbox-option-block">
+                <div class="checkbox-row"><input type="checkbox" name="productSelect" value="Diet & Zero Sodas" onchange="toggleInlineText(this)"><label>Diet & Zero-Sugar Sodas</label></div>
+                <input type="text" class="inline-detail-input" placeholder="Preferred lines/flavors? (e.g., Diet Coke, Pepsi Zero, Sprite Zero, Diet Dr Pepper, Cherry Coke Zero)">
+            </div>
+            <div class="checkbox-option-block">
+                <div class="checkbox-row"><input type="checkbox" name="productSelect" value="Energy Drinks" onchange="toggleInlineText(this)"><label>Premium Energy Drinks</label></div>
+                <input type="text" class="inline-detail-input" placeholder="Preferred lines/flavors? (e.g., Red Bull Regular/SugarFree/Juneberry, Monster, Celsius, Reign)">
+            </div>
+            <div class="checkbox-option-block">
+                <div class="checkbox-row"><input type="checkbox" name="productSelect" value="Water & Hydration" onchange="toggleInlineText(this)"><label>Purified Water & Hydration Lines</label></div>
+                <input type="text" class="inline-detail-input" placeholder="Preferred options? (e.g., Bottled Spring Water, Vitamin Water, Electrolit, Vita Coco)">
+            </div>
+            <div class="checkbox-option-block">
+                <div class="checkbox-row"><input type="checkbox" name="productSelect" value="Teas, Juices & Milk" onchange="toggleInlineText(this)"><label>Teas, Juices, and Dairy Beverages</label></div>
+                <input type="text" class="inline-detail-input" placeholder="Preferred brands? (e.g., Arizona Green Tea, Gold Peak Sweet, Tropicana, Apple Juice, Chocolate Milk)">
+            </div>
+            <div class="checkbox-option-block">
+                <div class="checkbox-row"><input type="checkbox" name="productSelect" value="Iced Coffee Products" onchange="toggleInlineText(this)"><label>Premium Iced Coffees</label></div>
+                <input type="text" class="inline-detail-input" placeholder="Preferred labels? (e.g., Dunkin Iced Caramel/Vanilla, Starbucks Vanilla/Mocha)">
+            </div>
+        </div>
+
+        <div class="category-label">🍿 Chips & Salty Snacks</div>
+        <div class="checkbox-grid catalog-grid">
+            <div class="checkbox-option-block">
+                <div class="checkbox-row"><input type="checkbox" name="productSelect" value="Potato & Kettle Chips" onchange="toggleInlineText(this)"><label>Traditional & Kettle-Cooked Potato Chips</label></div>
+                <input type="text" class="inline-detail-input" placeholder="Preferred flavors? (e.g., Lay's Original/Sour Cream/All Dressed, Martin's Salt & Vinegar, Kettle Cooked)">
+            </div>
+            <div class="checkbox-option-block">
+                <div class="checkbox-row"><input type="checkbox" name="productSelect" value="Tortilla & Corn Snacks" onchange="toggleInlineText(this)"><label>Tortilla Chips & Corn Snacks</label></div>
+                <input type="text" class="inline-detail-input" placeholder="Preferred brands? (e.g., Doritos Nacho Cheese/Cool Ranch/Spicy Sweet Chili, Takis Fuego, Regular Fritos)">
+            </div>
+            <div class="checkbox-option-block">
+                <div class="checkbox-row"><input type="checkbox" name="productSelect" value="Pretzels & Popcorn" onchange="toggleInlineText(this)"><label>Pretzel Lines & Packaged Popcorn</label></div>
+                <input type="text" class="inline-detail-input" placeholder="Preferred varieties? (e.g., Snyder's Pretzels, SkinnyPop, White Cheddar Popcorn, Funyuns)">
+            </div>
+            <div class="checkbox-option-block">
+                <div class="checkbox-row"><input type="checkbox" name="productSelect" value="Cheese Snacks & Mixes" onchange="toggleInlineText(this)"><label>Cheese Snacks & Salty Snack Mixes</label></div>
+                <input type="text" class="inline-detail-input" placeholder="Preferred brands? (e.g., Cheetos Crunchy, Cheez-It, Munchies Snack Mix, Chex Mix, Combos)">
+            </div>
+            <div class="checkbox-option-block">
+                <div class="checkbox-row"><input type="checkbox" name="productSelect" value="Crackers & Packaged Kits" onchange="toggleInlineText(this)"><label>Sandwich Crackers & Lunch Kits</label></div>
+                <input type="text" class="inline-detail-input" placeholder="Preferred configurations? (e.g., Lance Peanut Butter/Cheese, Goldfish, Ritz Bits, Lunchables Trays)">
+            </div>
+            <div class="checkbox-option-block">
+                <div class="checkbox-row"><input type="checkbox" name="productSelect" value="Nuts, Seeds & Pockets" onchange="toggleInlineText(this)"><label>Nuts, Seeds, and Healthy Snack Pockets</label></div>
+                <input type="text" class="inline-detail-input" placeholder="Preferred brands? (e.g., Planter's Peanuts/Cashews, Sargento Balanced Breaks)">
+            </div>
+        </div>
+        <div class="category-label">🍫 Chocolates, Candy & Gummies</div>
+        <div class="checkbox-grid catalog-grid">
+            <div class="checkbox-option-block">
+                <div class="checkbox-row"><input type="checkbox" name="productSelect" value="Chocolate Candy Bars" onchange="toggleInlineText(this)"><label>Classic Chocolate Candy Bars</label></div>
+                <input type="text" class="inline-detail-input" placeholder="Preferred bars? (e.g., Snickers, Twix, Kit Kat, Hershey's with Almonds/Regular, Nestle Crunch)">
+            </div>
+            <div class="checkbox-option-block">
+                <div class="checkbox-row"><input type="checkbox" name="productSelect" value="Bite Sized & Chewy Candy" onchange="toggleInlineText(this)"><label>Bite-Sized & Chewy Candies</label></div>
+                <input type="text" class="inline-detail-input" placeholder="Preferred options? (e.g., Peanut M&M's, Chocolate M&M's, Skittles, Wild Berry Skittles, Starburst)">
+            </div>
+            <div class="checkbox-option-block">
+                <div class="checkbox-row"><input type="checkbox" name="productSelect" value="Gummy & Novelty Sweets" onchange="toggleInlineText(this)"><label>Gummies & Novelty Sweet Packs</label></div>
+                <input type="text" class="inline-detail-input" placeholder="Preferred lines? (e.g., Sour Patch Kids, Twizzlers, Swedish Fish, Haribo Goldbears, Airheads)">
+            </div>
+            <div class="checkbox-option-block">
+                <div class="checkbox-row"><input type="checkbox" name="productSelect" value="Jerky & Meat Snacks" onchange="toggleInlineText(this)"><label>Beef Jerky & Protein Meat Snacks</label></div>
+                <input type="text" class="inline-detail-input" placeholder="Preferred brands? (e.g., Jack Link's Beef Steak/Jerky, Old Wisconsin Turkey Sausage & Cheese)">
+            </div>
+        </div>
+
+        <div class="category-label">🍩 Pastries, Pan Dulce & Cookies</div>
+        <div class="checkbox-grid catalog-grid">
+            <div class="checkbox-option-block">
+                <div class="checkbox-row"><input type="checkbox" name="productSelect" value="Honeybuns & Danishes" onchange="toggleInlineText(this)"><label>Honeybuns, Cinnamon Rolls, and Danishes</label></div>
+                <input type="text" class="inline-detail-input" placeholder="Preferred pastries? (e.g., Big Texas Cinnamon Roll, Duchess Honeybun, Hostess Danish)">
+            </div>
+            <div class="checkbox-option-block">
+                <div class="checkbox-row"><input type="checkbox" name="productSelect" value="Cookies & Brownies" onchange="toggleInlineText(this)"><label>Packaged Cookies, Brownies, and Wafers</label></div>
+                <input type="text" class="inline-detail-input" placeholder="Preferred cookie types? (e.g., Rice Krispies Treats, Oreos, Cosmic Brownies, Famous Amos, Grandma's Mini)">
+            </div>
+            <div class="checkbox-option-block">
+                <div class="checkbox-row"><input type="checkbox" name="productSelect" value="Breakfast Tarts & Bars" onchange="toggleInlineText(this)"><label>Toaster Tarts & Morning Breakfast Bars</label></div>
+                <input type="text" class="inline-detail-input" placeholder="Preferred flavors? (e.g., Strawberry/Brown Sugar Pop-Tarts, Belvita Biscuits, Nutri-Grain Bars)">
+            </div>
+        </div>
+
+        <div class="category-label">🍔 Frozen Foods & Microwaveable Meals</div>
+        <div class="checkbox-grid catalog-grid">
+            <div class="checkbox-option-block">
+                <div class="checkbox-row"><input type="checkbox" name="productSelect" value="Breakfast Sandwiches" onchange="toggleInlineText(this)"><label>Breakfast Sandwiches & Morning Wraps</label></div>
+                <input type="text" class="inline-detail-input" placeholder="Preferred profiles? (e.g., Jimmy Dean Sausage Biscuit/Croissant, El Monterey Wrap, Breakfast Bowl)">
+            </div>
+            <div class="checkbox-option-block">
+                <div class="checkbox-row"><input type="checkbox" name="productSelect" value="Personal Lunch Pizzas" onchange="toggleInlineText(this)"><label>Personal Lunch Pizzas (Deep Dish Styles)</label></div>
+                <input type="text" class="inline-detail-input" placeholder="Preferred toppings? (e.g., Red Baron Cheese, Red Baron Pepperoni)">
+            </div>
+            <div class="checkbox-option-block">
+                <div class="checkbox-row"><input type="checkbox" name="productSelect" value="Burritos & Chimichangas" onchange="toggleInlineText(this)"><label>Hearty Burritos & Chimichangas</label></div>
+                <input type="text" class="inline-detail-input" placeholder="Preferred varieties? (e.g., Tina's Burrito, El Monterey Beef & Bean XXL, Chicken & Jack Chimi)">
+            </div>
+            <div class="checkbox-option-block">
+                <div class="checkbox-row"><input type="checkbox" name="productSelect" value="Sandwiches & Burgers" onchange="toggleInlineText(this)"><label>Deli-Style Sandwiches & Flame-Broiled Burgers</label></div>
+                <input type="text" class="inline-detail-input" placeholder="Preferred labels? (e.g., White Castle Cheeseburgers, Rayburn's Philly Cheesesteak)">
+            </div>
+            <div class="checkbox-option-block">
+                <div class="checkbox-row"><input type="checkbox" name="productSelect" value="Soups & Noodle Bowls" onchange="toggleInlineText(this)"><label>Cup Soups, Pastas, and Instant Noodle Bowls</label></div>
+                <input type="text" class="inline-detail-input" placeholder="Preferred lines? (e.g., Nissin Cup Noodles Chicken/Beef, Velveeta Mac & Cheese, Kraft Mac, Chow Mein)">
+            </div>
+            <div class="checkbox-option-block">
+                <div class="checkbox-row"><input type="checkbox" name="productSelect" value="Shelf-Stable Tuna/Chicken Kits" onchange="toggleInlineText(this)"><label>Shelf-Stable Salad Snack Kits (Tuna or Chicken)</label></div>
+                <input type="text" class="inline-detail-input" placeholder="Preferred varieties? (e.g., Bumble Bee Tuna Salad On-The-Go, Bumble Bee Chicken Salad Kit)">
+            </div>
+        </div>
+        <div class="form-group" style="margin-top: 20px;">
+            <div class="checkbox-row">
+                <input type="checkbox" id="missingFieldsCheck" onchange="let d=document.getElementById('missingFieldsBlock'); if(this.checked){d.style.display='block';}else{d.style.display='none';d.value=''}">
+                <label for="missingFieldsCheck" style="font-weight: normal; margin-bottom: 0;">I want to request items not featured on the list block above</label>
+            </div>
+            <textarea id="missingFieldsBlock" style="display: none; margin-top: 10px;" placeholder="Describe any product brand variations or niche menu lines you want us to supply..."></textarea>
+        </div>
+
+        <div class="section-title">5. Narrative Notes & General Comments</div>
+        <div class="form-group">
+            <label for="additionalComments">Is there anything else you want to share regarding your breakroom vending machine customer experience?</label>
+            <textarea id="additionalComments" style="height: 100px;" placeholder="Provide generic service notes, custom ideas, or facility request feedback here..."></textarea>
+        </div>
+        <button type="submit" class="btn-submit">Submit Survey & Enter \$50 Raffle</button>
+    </form>
+</div>
+
+<script>
+function toggleInlineText(checkboxElement) {
+    const parentBlock = checkboxElement.closest('.checkbox-option-block');
+    const inlineInput = parentBlock.querySelector('.inline-detail-input');
+    if (inlineInput) {
+        if (checkboxElement.checked) {
+            inlineInput.style.display = 'block';
+            inlineInput.setAttribute('required', 'true');
+            inlineInput.focus();
+        } else {
+            inlineInput.style.display = 'none';
+            inlineInput.removeAttribute('required');
+            inlineInput.value = '';
+        }
+    }
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const locationParam = urlParams.get('location');
+    if (locationParam) {
+        const locationField = document.getElementById('location');
+        if (locationField) {
+            locationField.value = decodeURIComponent(locationParam);
+            locationField.readOnly = true; 
+            locationField.style.background = "#e5e7eb";
+            locationField.style.color = "#374151";
+        }
+    }
+});
+
+function submitForm(event) {
+    event.preventDefault();
+    const getDetailedCatalogSelections = () => {
+        return Array.from(document.querySelectorAll('input[name="productSelect"]:checked')).map(cb => {
+            const parent = cb.closest('.checkbox-option-block');
+            const userFlavorsText = parent.querySelector('.inline-detail-input')?.value.trim();
+            return userFlavorsText ? `${cb.value} (${userFlavorsText})` : cb.value;
+        });
+    };
+
+    const formData = {
+        fullName: document.getElementById('fullName').value,
+        location: document.getElementById('location').value,
+        contactInfo: document.getElementById('contactInfo').value,
+        paymentPref: document.querySelector('input[name="paymentPref"]:checked')?.value || "Not Answered",
+        payPrefComments: document.getElementById('payPrefComm').value,
+        machineCleanliness: document.querySelector('input[name="machineClean"]:checked')?.value || "Not Answered",
+        cleanlinessComments: document.getElementById('cleanComm').value,
+        breakroomCleanliness: document.querySelector('input[name="spaceClean"]:checked')?.value || "Not Answered",
+        breakroomComments: document.getElementById('spaceCleanComm').value,
+        stockFrequency: document.querySelector('input[name="machineStock"]:checked')?.value || "Not Answered",
+        stockComments: document.getElementById('stockComm').value,
+        productFreshness: document.querySelector('input[name="itemFresh"]:checked')?.value || "Not Answered",
+        freshnessComments: document.getElementById('freshComm').value,
+        preferredServiceDay: document.querySelector('input[name="serviceDay"]:checked')?.value || "Not Answered",
+        serviceDayComments: document.getElementById('serviceDayComm').value,
+        paymentHardwareReliability: document.querySelector('input[name="payReliability"]:checked')?.value || "Not Answered",
+        paymentHardwareComments: document.getElementById('scalePayComm').value,
+        recommendationNetScore: "Not Applicable",
+        recommendationComments: "None",
+        requestedMachineUpgrades: Array.from(document.querySelectorAll('input[name="hardwareFeatures"]:checked')).map(cb => cb.value),
+        upgradesComments: document.getElementById('featuresComm').value,
+        catalogSelections: getDetailedCatalogSelections(),
+        unlistedCustomRequests: document.getElementById('missingFieldsBlock').value,
+        narrativeAdditionalComments: document.getElementById('additionalComments').value
+    };
+
+    const TARGET_WEB_WEBHOOK = 'https://script.google.com/macros/s/AKfycbwSjHKecMiDwfS8sR6xhjyejVGphWzQYXiWdZkDR-OFnHGsCmoeeK-EvEp2v3K5TiA/exec';
+
+    if(TARGET_WEB_WEBHOOK === 'YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL') {
+        alert("Success! Your product options and flavor entries have been recorded safely.\n\n(Database Config Note: When you are ready to forward entries straight to your live Google Sheet, open this text file and replace 'YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL' with your real Google Script Web App URL string).");
+        document.getElementById('surveyForm').reset();
+        document.querySelectorAll('.inline-detail-input').forEach(input => input.style.display = 'none');
+        document.getElementById('missingFieldsBlock').style.display = 'none';
+        window.scrollTo(0,0);
+        return;
+    }
+
+    fetch(TARGET_WEB_WEBHOOK, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData)
+    }).then(() => {
+        alert('Thank you! Your feedback has been successfully processed, and your entry has been locked in for our monthly \$50 gift card drawing!');
+        document.getElementById('surveyForm').reset();
+        document.querySelectorAll('.inline-detail-input').forEach(input => input.style.display = 'none');
+        document.getElementById('missingFieldsBlock').style.display = 'none';
+        window.scrollTo(0,0);
+    }).catch(err => alert('Data transmission terminal error: ' + err));
+}
+</script>
+</body>
+</html>
