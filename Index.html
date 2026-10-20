@@ -14,16 +14,21 @@ window.addEventListener('DOMContentLoaded', () => {
     const userLanguage = navigator.language || navigator.userLanguage;
     const isSpanish = userLanguage.toLowerCase().startsWith('es');
     
-    // 3. FORCE THE ROUTER TO USE RELATIVE SUBDIRECTORY PATHS
-    // We remove any leading slashes to keep the user inside your folder layout
+    // 3. Automatically discover the exact folder path we are sitting in
+    // This extracts "/vending-survey/" dynamically regardless of your username
+    const currentPath = window.location.pathname;
+    const folderPath = currentPath.endsWith('/') ? currentPath : currentPath.substring(0, currentPath.lastIndexOf('/') + 1);
+    
+    // 4. Match your exact repository filenames cleanly
     let destinationFile = 'vending_survey.html'; 
     if (isSpanish) {
         destinationFile = 'vending_survey_es.html';
     }
     
-    // 4. Cleanly transition the browser window forward
-    window.location.href = destinationFile + currentParams;
+    // 5. Securely route the window using an absolute path anchor
+    window.location.href = window.location.origin + folderPath + destinationFile + currentParams;
 });
 </script>
 </body>
 </html>
+
