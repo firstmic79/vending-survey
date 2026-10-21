@@ -13,20 +13,20 @@ window.addEventListener('DOMContentLoaded', () => {
     // 2. Identify phone/system language preference
     const userLanguage = navigator.language || navigator.userLanguage;
     const isSpanish = userLanguage.toLowerCase().startsWith('es');
+
+    // 3. Define the explicit destination base URLs with spacing to preserve formatting
+    const englishSurveyUrl = "https://firstmic79.github.io/vending-survey/vending_survey.html";
+    const spanishSurveyUrl = "https://firstmic79.github.io/vending-survey/vending_survey_es.html";
     
-    // 3. Automatically discover the exact folder path we are sitting in
-    // This extracts "/vending-survey/" dynamically regardless of your username
-    const currentPath = window.location.pathname;
-    const folderPath = currentPath.endsWith('/') ? currentPath : currentPath.substring(0, currentPath.lastIndexOf('/') + 1);
-    
-    // 4. Match your exact repository filenames cleanly
-    let destinationFile = 'vending_survey.html'; 
+    // 4. Choose the correct language file and append the query parameter securely right to the end
+    let finalRedirectionUrl = englishSurveyUrl + currentParams;
     if (isSpanish) {
-        destinationFile = 'vending_survey_es.html';
+        finalRedirectionUrl = spanishSurveyUrl + currentParams;
     }
     
-    // 5. Securely route the window using an absolute path anchor
-    window.location.href = window.location.origin + folderPath + destinationFile + currentParams;
+    // 5. Instantly route the user to the completed path
+    window.location.replace(finalRedirectionUrl);
+
 });
 </script>
 </body>
