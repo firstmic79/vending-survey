@@ -161,7 +161,45 @@
                 <div class="checkbox-option-block"><div class="checkbox-row"><input type="checkbox" name="hardwareFeatures" value="Gamified Prizes"><label>More touchscreen games, screen sweepstakes, or surprise lottery prize distributions</label></div></div>
             </div>
             <div class="comment-box"><label for="featuresComm">Optional tech feature upgrade logs:</label><textarea id="featuresComm" placeholder="Add custom app module or telemetry ideas..."></textarea></div>
+    <!-- New Equipment Request Section -->
+    <div class="form-section">
+        <h3>3b. Desired Breakroom Equipment Upgrades</h3>
+        <p class="section-description">What types of specialized equipment or machinery would you value having added to your breakroom lounge? (Check all that apply)</p>
+        
+        <label class="checkbox-label">
+            <input type="checkbox" name="equipment_coffee" value="Coffee Service">
+            <span>Premium Coffee Services (Freshly brewed options, espresso, or specialty hot drinks)</span>
+        </label>
+        
+        <label class="checkbox-label">
+            <input type="checkbox" name="equipment_water" value="Water Machine">
+            <span>Dedicated Water Purification Machines (Ice and filtered water dispensers)</span>
+        </label>
+        
+        <label class="checkbox-label">
+            <input type="checkbox" name="equipment_coolers" value="Smart Coolers AI">
+            <span>AI Smart Coolers / Grab-and-Go Micro Market Coolers</span>
+        </label>
+        
+        <label class="checkbox-label">
+            <input type="checkbox" name="equipment_frozen" value="Frozen Food Machine">
+            <span>Frozen Food Machines (Ability to purchase frozen meals, entrees, or ice cream items still fully frozen)</span>
+        </label>
+        
+        <label class="field-label">Optional equipment or hardware feedback notes:</label>
+        <textarea name="equipment_notes" placeholder="Detail any specific equipment or machine model requests here..."></textarea>
+        <div class="section-title">3b. Desired Breakroom Equipment Upgrades</div>
+        <div class="form-group">
+            <label>What types of specialized equipment or machinery would you value having added to your breakroom lounge? (Check all that apply)</label>
+            <div class="checkbox-grid">
+                <div class="checkbox-option-block"><div class="checkbox-row"><input type="checkbox" name="hardwareEquipment" value="Coffee Service"><label>Premium Coffee Services (Freshly brewed options, espresso, or specialty hot drinks)</label></div></div>
+                <div class="checkbox-option-block"><div class="checkbox-row"><input type="checkbox" name="hardwareEquipment" value="Water Machine"><label>Dedicated Water Purification Machines (Ice and filtered water dispensers)</label></div></div>
+                <div class="checkbox-option-block"><div class="checkbox-row"><input type="checkbox" name="hardwareEquipment" value="Smart Coolers AI"><label>AI Smart Coolers / Grab-and-Go Micro Market Coolers</label></div></div>
+                <div class="checkbox-option-block"><div class="checkbox-row"><input type="checkbox" name="hardwareEquipment" value="Frozen Food Machine"><label>Frozen Food Machines (Ability to purchase frozen meals, entrees, or ice cream items still fully frozen)</label></div></div>
+            </div>
+            <div class="comment-box"><label for="equipmentComm">Optional equipment or hardware feedback notes:</label><textarea id="equipmentComm" placeholder="Detail any specific equipment or machine model requests here..."></textarea></div>
         </div>
+    </div>
         <div class="section-title">4. Core Product Inventory Preference Selections</div>
         <div class="instructions" style="margin-top: -15px; margin-bottom: 20px;">Check the items you regularly buy or want to see stocked. Boxes will automatically expand to capture your brand and flavor requests.</div>
 
@@ -366,7 +404,9 @@ function submitForm(event) {
         recommendationNetScore: "Not Applicable",
         recommendationComments: "None",
         requestedMachineUpgrades: Array.from(document.querySelectorAll('input[name="hardwareFeatures"]:checked')).map(cb => cb.value),
-        upgradesComments: document.getElementById('featuresComm').value,
+        requestedEquipmentUpgrades: Array.from(document.querySelectorAll('input[name="hardwareEquipment"]:checked')).map(cb => cb.value),
+        equipmentComments: document.getElementById('equipmentComm').value,
+	upgradesComments: document.getElementById('featuresComm').value,
         catalogSelections: getDetailedCatalogSelections(),
         unlistedCustomRequests: document.getElementById('missingFieldsBlock').value,
         narrativeAdditionalComments: document.getElementById('additionalComments').value
