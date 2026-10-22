@@ -157,6 +157,17 @@
                 <div class="checkbox-option-block"><div class="checkbox-row"><input type="checkbox" name="hardwareFeatures" value="Gamified Prizes"><label>Más juegos, sorteos digitales en pantalla o premios aleatorios integrados al pagar</label></div></div>
             </div>
             <div class="comment-box"><label for="featuresComm">Comentarios opcionales sobre las capacidades o actualizaciones de la máquina:</label><textarea id="featuresComm" placeholder="Añada sugerencias de funciones personalizadas..."></textarea></div>
+<div class="section-title">3b. Actualizaciones Deseadas para el Equipo de la Sala de Descanso</div>
+        <div class="form-group">
+            <label>¿Qué tipo de equipo especializado o maquinaria le gustaría que se agregara a su sala de descanso? (Marque todas las que apliquen)</label>
+            <div class="checkbox-grid">
+                <div class="checkbox-option-block"><div class="checkbox-row"><input type="checkbox" name="hardwareEquipment" value="Coffee Service"><label>Servicios de Café Premium (Opciones recién preparadas, espresso o bebidas calientes especializadas)</label></div></div>
+                <div class="checkbox-option-block"><div class="checkbox-row"><input type="checkbox" name="hardwareEquipment" value="Water Machine"><label>Máquinas Dedicadas a la Purificación de Agua (Dispensadores de hielo y agua filtrada)</label></div></div>
+                <div class="checkbox-option-block"><div class="checkbox-row"><input type="checkbox" name="hardwareEquipment" value="Smart Coolers AI"><label>Enfriadores Inteligentes con IA / Enfriadores de Micro Market estilo Grab-and-Go</label></div></div>
+                <div class="checkbox-option-block"><div class="checkbox-row"><input type="checkbox" name="hardwareEquipment" value="Frozen Food Machine"><label>Máquinas de Alimentos Congelados (Posibilidad de comprar comidas preparadas o helados completamente congelados)</label></div></div>
+            </div>
+            <div class="comment-box"><label for="equipmentComm">Notas opcionales sobre comentarios del equipo o hardware:</label><textarea id="equipmentComm" placeholder="Detalle cualquier solicitud específica de equipo o modelo de máquina aquí..."></textarea></div>
+        </div>
         </div>
         <div class="section-title">4. Selección de Inventario de Productos Principales</div>
         <div class="instructions" style="margin-top: -15px; margin-bottom: 20px;">Marque las casillas de los productos que compra o que desea ver con más frecuencia. Las casillas se expandirán automáticamente para que pueda solicitar marcas y sabores específicos.</div>
@@ -299,6 +310,8 @@ function submitForm(event) {
         recommendationNetScore: "Not Applicable",
         recommendationComments: "None",
         requestedMachineUpgrades: Array.from(document.querySelectorAll('input[name="hardwareFeatures"]:checked')).map(cb => cb.value),
+	requestedEquipmentUpgrades: Array.from(document.querySelectorAll('input[name="hardwareEquipment"]:checked')).map(cb => cb.value),
+        equipmentComments: document.getElementById('equipmentComm').value,
         upgradesComments: document.getElementById('featuresComm').value,
         catalogSelections: getDetailedCatalogSelections(),
         unlistedCustomRequests: document.getElementById('missingFieldsBlock').value,
